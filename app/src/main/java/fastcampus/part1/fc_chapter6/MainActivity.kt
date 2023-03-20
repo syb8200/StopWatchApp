@@ -2,9 +2,12 @@ package fastcampus.part1.fc_chapter6
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.view.Gravity
 import android.view.View
+import android.widget.TextView
 import androidx.appcompat.app.AlertDialog
 import androidx.core.view.isVisible
+import androidx.core.view.setPadding
 import fastcampus.part1.fc_chapter6.databinding.ActivityMainBinding
 import fastcampus.part1.fc_chapter6.databinding.DialogCountdownSettingBinding
 import java.util.Timer
@@ -104,6 +107,8 @@ class MainActivity : AppCompatActivity() {
 
         binding.countdownGroup.isVisible = true
         initCountdownViews()
+
+        binding.lapContainerLinearLayout.removeAllViews()
     }
 
     private fun pause() {
@@ -112,7 +117,21 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun lap() {
+        // TextView를 코드 상에서 동적으로 생성
+        if (currentDeciSecond == 0) return
 
+        val container = binding.lapContainerLinearLayout
+        TextView(this).apply {
+            textSize = 20f
+            gravity = Gravity.CENTER
+            val minutes = currentDeciSecond.div(10) / 60
+            val seconds = currentDeciSecond.div(10) % 60
+            val deciSeconds = currentDeciSecond % 10
+            text = container.childCount.inc().toString() + ". " + String.format("%02d:%02d %01d", minutes, seconds, deciSeconds)
+            setPadding(30)
+        }.let { lapTextView ->
+            container.addView(lapTextView, 0)
+        }
     }
 
     private fun showCountdownSettingDialog() {

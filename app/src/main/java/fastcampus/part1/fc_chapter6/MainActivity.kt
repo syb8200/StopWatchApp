@@ -1,5 +1,7 @@
 package fastcampus.part1.fc_chapter6
 
+import android.media.AudioManager
+import android.media.ToneGenerator
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.Gravity
@@ -91,6 +93,12 @@ class MainActivity : AppCompatActivity() {
                     binding.countdownTextView.text = String.format("%02d", seconds )
                     binding.countdownProgressBar.progress = progress.toInt()
                 }
+            }
+
+            // 3초 전 카운트 다운 시 알림음 설정 (마지막은 다른 소리)
+            if (currentDeciSecond == 0 && currentCountdownDeciSecond < 31 && currentCountdownDeciSecond % 10 == 0) {
+                val toneType = if (currentCountdownDeciSecond == 0) ToneGenerator.TONE_CDMA_HIGH_L else ToneGenerator.TONE_CDMA_ANSWER
+                ToneGenerator(AudioManager.STREAM_ALARM, ToneGenerator.MAX_VOLUME).startTone(toneType, 100)
             }
         }
     }
